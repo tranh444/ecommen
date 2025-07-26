@@ -32,6 +32,7 @@ export class AuthService {
       })
       return user
     } catch (error) {
+      console.log('Register error:', error)
       if (isUniqueConstraintPrismaError(error)) {
         throw new ConflictException('Email đã tồn tại')
       }
