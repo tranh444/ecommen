@@ -7,8 +7,10 @@ import { AccessTokenGuard } from 'src/shared/guards/access-token.guard'
 import { APIKeyGuard } from 'src/shared/guards/api-key.guard'
 import { APP_GUARD } from '@nestjs/core'
 import { AuthenticationGuard } from 'src/shared/guards/authentication.guard'
+import { SharedUserRepository } from './repositories/share-user.repo'
+import { EmailService } from './services/email.service'
 
-const sharedServices = [PrismaService, HashingService, TokenService]
+const sharedServices = [PrismaService, HashingService, TokenService, SharedUserRepository,EmailService]
 
 @Global()
 @Module({

@@ -8,7 +8,7 @@ import { APIKeyGuard } from 'src/shared/guards/api-key.guard'
 @Injectable()
 export class AuthenticationGuard implements CanActivate {
   private readonly authTypeGuardMap: Record<string, CanActivate>
-  
+
   constructor(
     private readonly reflector: Reflector,
     private readonly accessTokenGuard: AccessTokenGuard,
