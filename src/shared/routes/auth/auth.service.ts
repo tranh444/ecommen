@@ -105,7 +105,7 @@ export class AuthService {
       ])
     }
 
-    return verificationCode
+    return { message: 'Gửi mã OTP thành công' }
   }
   async login(body: LoginBodyDTO & { userAgent: string; ip: string }) {
     const user = await this.authRepository.findUniqueUserIncludeRole({
@@ -144,7 +144,7 @@ export class AuthService {
     return tokens
   }
 
-  private async generateTokens({ userId, deviceId, roleId, roleName }: AccessTokenPayloadCreate) {
+  public async generateTokens({ userId, deviceId, roleId, roleName }: AccessTokenPayloadCreate) {
     const [accessToken, refreshToken] = await Promise.all([
       this.tokenService.signAccessToken({ userId, deviceId, roleId, roleName }),
       this.tokenService.signRefreshToken({ userId }),
@@ -218,5 +218,4 @@ export class AuthService {
       throw new UnauthorizedException()
     }
   }
-
 }
