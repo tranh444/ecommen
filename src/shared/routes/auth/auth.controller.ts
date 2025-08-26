@@ -2,7 +2,7 @@ import { Controller, Post, Body, Get, HttpCode, HttpStatus, Ip , Query , Res } f
 import { AuthService } from './auth.service'
 import { ZodSerializerDto } from 'nestjs-zod'
 import { Response } from 'express'
-import { LoginBodyDTO, RegisterBodyDTO, RegisterResDTO, SendOTPBodyDTO, RefreshTokenBodyDTO, RefreshTokenResDTO, LoginResDTO , LogoutBodyDTO , GetAuthorizationUrlResDTO  } from '../auth/auth.dto'
+import { LoginBodyDTO, RegisterBodyDTO, RegisterResDTO, SendOTPBodyDTO, RefreshTokenBodyDTO, RefreshTokenResDTO, LoginResDTO , LogoutBodyDTO , GetAuthorizationUrlResDTO, ForgotPasswordBodyDTO  } from '../auth/auth.dto'
 import { SendOTPBodyType } from './auth.model'
 import { UserAgent } from 'src/shared/decorators/user-agent.decorator'
 import { IsPublic } from 'src/shared/decorators/auth.decorator'
@@ -88,5 +88,11 @@ export class AuthController {
           : 'Đã xảy ra lỗi khi đăng nhập bằng Google, vui lòng thử lại bằng cách khác'
       return res.redirect(`${envConfig.GOOGLE_CLIENT_REDIRECT_URI}?errorMessage=${message}`)
     }
+  }
+  @Post('forgot-password')
+  @IsPublic()
+  @ZodSerializerDto(MessageResDTO)
+  forgotPassword(@Body() body: ForgotPasswordBodyDTO) {
+    return this.authService.forgotPassword(body)
   }
 }

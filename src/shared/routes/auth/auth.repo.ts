@@ -110,7 +110,7 @@ export class AuthRepository {
       where: uniqueObject,
     })
   }
-  
+
   async createUserInclueRole(
     user: Pick<UserType, 'email' | 'name' | 'password' | 'phoneNumber' | 'avatar' | 'roleId'>,
   ): Promise<UserType & { role: RoleType }> {
@@ -122,4 +122,36 @@ export class AuthRepository {
     })
   }
 
+  updateUser(where: { id: number } | { email: string }, data: Partial<Omit<UserType, 'id'>>): Promise<UserType> {
+    return this.prismaService.user.update({
+      where,
+      data,
+    })
+  }
+
+  deleteVerificationCode(
+    uniqueValue:
+      | { id: number }
+      | { email_type: { email: string; type: TypeOfVerificationCodeType } }
+      | { email: string; code: string; type: TypeOfVerificationCodeType },
+  ): Promise<VerificationCodeType> {
+    if ('email' in uniqueValue && 'code' in uniqueValue && 'type' in uniqueValue) {
+      // Sử dụng findFirst + delete để giữ nguyên chức năng
+      return this.prismaService.verificationCode.findFirst({
+        where: {
+          email: uniqueValue.email,
+          code: uniqueValue.code,
+          type: uniqueValue.type,
+        },
+      }).then(record => {
+        if (!record) throw new Error('Verification code not found')
+        return this.prismaService.verificationCode.delete({
+          where: { id: record.id }
+        })
+      })
+    }
+    return this.prismaService.verificationCode.delete({
+      where: uniqueValue as any,
+    })
+  }
 }
